@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
-public class DiscountDriverImpactCalculator implements DriverImpactCalculator {
+public class SurchargeDriverImpactCalculator implements DriverImpactCalculator {
 
-    private final Logger log = LoggerFactory.getLogger(DiscountDriverImpactCalculator.class);
+    private final Logger log = LoggerFactory.getLogger(SurchargeDriverImpactCalculator.class);
 
     @Override
     public BigDecimal calculateDriverPrice(PricingContext context, BigDecimal weightage) {

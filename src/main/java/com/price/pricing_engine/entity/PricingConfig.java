@@ -14,7 +14,7 @@ public class PricingConfig {
 
     private String productType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "pricing_driver_id", referencedColumnName = "id")
     private PricingDriverEntity pricingDriver;
 

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "pricing_driver")
-public class PricingDriver {
+public class PricingDriverEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

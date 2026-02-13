@@ -16,7 +16,7 @@ public class PricingConfig {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pricing_driver_id", referencedColumnName = "id")
-    private PricingDriver pricingDriver;
+    private PricingDriverEntity pricingDriver;
 
     @Column(precision = 10, scale = 4)
     private BigDecimal weightage;
@@ -29,11 +29,11 @@ public class PricingConfig {
         this.id = id;
     }
 
-    public PricingDriver getPricingDriver() {
+    public PricingDriverEntity getPricingDriver() {
         return pricingDriver;
     }
 
-    public void setPricingDriver(PricingDriver pricingDriver) {
+    public void setPricingDriver(PricingDriverEntity pricingDriver) {
         this.pricingDriver = pricingDriver;
     }
 

@@ -13,7 +13,7 @@ public class PriceResource {
 
     private PriceService priceService;
 
-    private PriceResource(PriceService priceService) {
+    public PriceResource(PriceService priceService) {
         this.priceService = priceService;
     }
 

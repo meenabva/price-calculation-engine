@@ -2,6 +2,8 @@ package com.price.pricing_engine.strategy;
 
 import com.price.pricing_engine.dto.PricingContext;
 import com.price.pricing_engine.entity.Product;
+import com.price.pricing_engine.entity.ProductPricingAudit;
+import com.price.pricing_engine.repository.ProductPricingAuditRepository;
 import com.price.pricing_engine.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +19,15 @@ public class BasePriceCalculationStrategy implements PriceCalculationStrategy {
 
     private ProductRepository productRepository;
 
+    private ProductPricingAuditRepository productPricingAuditRepository;
+
     BasePriceCalculationStrategy() {}
 
     @Autowired
-    BasePriceCalculationStrategy(ProductRepository productRepository) {
+    BasePriceCalculationStrategy(ProductRepository productRepository,
+                                 ProductPricingAuditRepository productPricingAuditRepository) {
         this.productRepository = productRepository;
+        this.productPricingAuditRepository = productPricingAuditRepository;
     }
 
     @Override
@@ -32,7 +38,12 @@ public class BasePriceCalculationStrategy implements PriceCalculationStrategy {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new NoSuchElementException(
                             "Product with id " + productId + " not found"));
-            return product.getBasePrice();
+            BigDecimal price = product.getBasePrice();
+            ProductPricingAudit productPricingAudit = new ProductPricingAudit();
+            productPricingAudit.setCalculatedPrice(price);
+            productPricingAudit.setProduct(product);
+            productPricingAuditRepository.save(productPricingAudit);
+            return price;
         } catch (Exception e) {
             logger.error("Error calculating product price for pricing context {} with base strategy.", pricingContext, e);
             throw new RuntimeException(e);

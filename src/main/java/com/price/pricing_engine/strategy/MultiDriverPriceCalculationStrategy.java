@@ -5,8 +5,10 @@ import com.price.pricing_engine.driver.DriverImpactCalculatorFactory;
 import com.price.pricing_engine.dto.PricingContext;
 import com.price.pricing_engine.entity.PricingConfig;
 import com.price.pricing_engine.entity.Product;
+import com.price.pricing_engine.entity.ProductPricingAudit;
 import com.price.pricing_engine.repository.PricingConfigRepository;
 import com.price.pricing_engine.repository.PricingDriverRepository;
+import com.price.pricing_engine.repository.ProductPricingAuditRepository;
 import com.price.pricing_engine.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +28,17 @@ public class MultiDriverPriceCalculationStrategy implements PriceCalculationStra
 
     private PricingConfigRepository pricingConfigRepository;
 
+    private ProductPricingAuditRepository productPricingAuditRepository;
+
     MultiDriverPriceCalculationStrategy() {}
 
     @Autowired
     MultiDriverPriceCalculationStrategy(ProductRepository productRepository,
                                         PricingConfigRepository pricingConfigRepository,
-                                        PricingDriverRepository pricingDriverRepository) {
+                                        ProductPricingAuditRepository productPricingAuditRepository) {
         this.productRepository = productRepository;
         this.pricingConfigRepository = pricingConfigRepository;
-        this.pricingDriverRepository = pricingDriverRepository;
+        this.productPricingAuditRepository = productPricingAuditRepository;
     }
 
     @Override
@@ -56,11 +60,16 @@ public class MultiDriverPriceCalculationStrategy implements PriceCalculationStra
                 return CompletableFuture.supplyAsync(() -> driverImpactCalculator
                         .calculateDriverPrice(pricingContext, pricingConfig.getWeightage()));
             }).toList();
-            return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+            BigDecimal price = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                     .thenApply(v -> futures.stream()
                             .map(CompletableFuture::join)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .reduce(product.getBasePrice(), BigDecimal::add))
                     .join();
+            ProductPricingAudit productPricingAudit = new ProductPricingAudit();
+            productPricingAudit.setCalculatedPrice(price);
+            productPricingAudit.setProduct(product);
+            productPricingAuditRepository.save(productPricingAudit);
+            return price;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

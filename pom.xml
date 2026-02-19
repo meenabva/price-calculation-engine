@@ -56,6 +56,10 @@
 			<artifactId>sqlite-dialect</artifactId>
 			<version>0.1.2</version> <!-- Use the appropriate version -->
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
 
 	</dependencies>
 

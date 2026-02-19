@@ -1,7 +1,7 @@
 package com.price.pricing_engine.resource;
 
 import com.price.pricing_engine.dto.PricingContext;
-import com.price.pricing_engine.service.PriceService;
+import com.price.pricing_engine.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -9,17 +9,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class PriceResource {
+public class ProductResource {
 
-    private PriceService priceService;
+    private final ProductService productService;
 
-    public PriceResource(PriceService priceService) {
-        this.priceService = priceService;
+    public ProductResource(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping("/calculate-price")
-    public BigDecimal calculatePrice(@RequestBody PricingContext pricingContext) {
-        return priceService.calculateProductPrice(pricingContext);
+    public void calculatePriceAsync(@RequestBody PricingContext pricingContext) {
+        productService.calculateProductPriceAsync(pricingContext);
     }
 
     @GetMapping("/{productId}/price-history")

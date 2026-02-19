@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public interface PriceService {
+public interface ProductService {
 
     public BigDecimal calculateProductPrice(PricingContext pricingContext);
+
+    void calculateProductPriceAsync(PricingContext pricingContext);
 
 }

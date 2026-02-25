@@ -18,9 +18,13 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
     private static final Logger logger = LoggerFactory.getLogger(PriceCalculationServiceImpl.class);
     private final AuditService auditService;
 
+    private final PriceCalculationStrategyFactory priceCalculationStrategyFactory;
+
     @Autowired
-    public PriceCalculationServiceImpl(AuditService auditService) {
+    public PriceCalculationServiceImpl(AuditService auditService, PriceCalculationStrategyFactory priceCalculationStrategyFactory) {
         this.auditService = auditService;
+        this.priceCalculationStrategyFactory = priceCalculationStrategyFactory;
+
     }
 
     @Override
@@ -28,8 +32,8 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         try {
             Map<String, Object> metadata = pricingContext.metadata();
             String strategy = (String) metadata.get("strategy");
-            PriceCalculationStrategy priceCalculationStrategy = PriceCalculationStrategyFactory
-                    .getInstance().getPriceCalculationStrategy(strategy);
+            PriceCalculationStrategy priceCalculationStrategy = priceCalculationStrategyFactory
+                    .getPriceCalculationStrategy(strategy);
             BigDecimal price = priceCalculationStrategy.calculateProductPrice(pricingContext);
             logger.info("Calculated price: {}", price);
             auditService.saveAudit(pricingContext, price);

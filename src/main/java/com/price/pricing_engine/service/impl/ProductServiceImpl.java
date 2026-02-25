@@ -8,19 +8,25 @@ import com.price.pricing_engine.strategy.PriceCalculationStrategyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
     private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private final PriceRequestProducer priceRequestProducer;
 
+    private final PriceCalculationStrategyFactory priceCalculationStrategyFactory;
+
     @Autowired
-    public ProductServiceImpl(PriceRequestProducer priceRequestProducer) {
+    public ProductServiceImpl(PriceRequestProducer priceRequestProducer,
+                              PriceCalculationStrategyFactory priceCalculationStrategyFactory) {
         this.priceRequestProducer = priceRequestProducer;
+        this.priceCalculationStrategyFactory = priceCalculationStrategyFactory;
     }
 
     @Override
@@ -29,8 +35,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Map<String, Object> metadata = pricingContext.metadata();
             String strategy = (String) metadata.get("strategy");
-            PriceCalculationStrategy priceCalculationStrategy = PriceCalculationStrategyFactory
-                    .getInstance().getPriceCalculationStrategy(strategy);
+            PriceCalculationStrategy priceCalculationStrategy = priceCalculationStrategyFactory.getPriceCalculationStrategy(strategy);
             return priceCalculationStrategy.calculateProductPrice(pricingContext);
         } catch (Exception e) {
             throw new RuntimeException(e);

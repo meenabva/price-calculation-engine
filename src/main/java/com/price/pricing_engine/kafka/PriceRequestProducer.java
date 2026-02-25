@@ -14,14 +14,15 @@ public class PriceRequestProducer {
     @Value("${pricing.kafka.topic:price-requests}")
     private String topic;
 
-    private final KafkaTemplate<String, PricingContext> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public PriceRequestProducer(KafkaTemplate<String, PricingContext> kafkaTemplate) {
+    public PriceRequestProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendPriceRequest(PricingContext pricingContext) {
         logger.info("Publishing pricing request to Kafka: {}", pricingContext);
+        // It will still work perfectly with your record
         kafkaTemplate.send(topic, pricingContext);
     }
 }

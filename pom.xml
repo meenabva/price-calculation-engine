@@ -32,7 +32,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -52,13 +52,18 @@
 		</dependency>
 		<!-- Hibernate SQLite Dialect (optional, but recommended for full JPA support) -->
 		<dependency>
-			<groupId>com.github.gwenn</groupId>
-			<artifactId>sqlite-dialect</artifactId>
-			<version>0.1.2</version> <!-- Use the appropriate version -->
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-community-dialects</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
 	</dependencies>

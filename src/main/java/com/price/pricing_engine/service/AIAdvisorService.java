@@ -1,6 +1,8 @@
 package com.price.pricing_engine.service;
 
+import com.price.pricing_engine.dto.AIRecomendationDTO;
+
 public interface AIAdvisorService {
 
-    public String getPricingAdvice(String productId);
+    public AIRecomendationDTO getPricingAdvice(String productId);
 }

@@ -1,6 +1,8 @@
 package com.price.pricing_engine.resource;
 
+import com.price.pricing_engine.dto.AIRecomendationDTO;
 import com.price.pricing_engine.dto.PricingContext;
+import com.price.pricing_engine.service.AIAdvisorService;
 import com.price.pricing_engine.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +15,11 @@ public class ProductResource {
 
     private final ProductService productService;
 
-    public ProductResource(ProductService productService) {
+    private final AIAdvisorService aiAdvisorService;
+
+    public ProductResource(ProductService productService,  AIAdvisorService aiAdvisorService) {
         this.productService = productService;
+        this.aiAdvisorService = aiAdvisorService;
     }
 
     @PostMapping("/calculate-price")
@@ -29,4 +34,7 @@ public class ProductResource {
     }
 
     @GetMapping("/ai")
+    public AIRecomendationDTO getAIAdvice(@RequestParam String productId) {
+        return aiAdvisorService.getPricingAdvice(productId);
+    }
 }

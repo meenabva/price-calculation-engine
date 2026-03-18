@@ -1,4 +1,6 @@
 package com.price.pricing_engine.dto;
 
-public record DriverWeightageDTO(String driverName, double weightage) {
+import java.math.BigDecimal;
+
+public record DriverWeightageDTO(String driverName, BigDecimal weightage) {
 }

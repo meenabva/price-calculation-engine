@@ -1,9 +1,13 @@
 package com.price.pricing_engine.service.impl;
 
+import com.price.pricing_engine.dto.AIRecomendationDTO;
+import com.price.pricing_engine.entity.Product;
 import com.price.pricing_engine.repository.ProductRepository;
 import com.price.pricing_engine.service.AIAdvisorService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AIAdvisorServiceImpl implements AIAdvisorService {
 
     private final ChatClient chatClient;
@@ -17,8 +21,8 @@ public class AIAdvisorServiceImpl implements AIAdvisorService {
     }
 
     @Override
-    public String getPricingAdvice(String productId) {
-        productRepository.findById(Long.valueOf(productId))
+    public AIRecomendationDTO getPricingAdvice(String productId) {
+        Product product = productRepository.findById(Long.valueOf(productId))
                 .orElseThrow(() -> new IllegalArgumentException("Product not found for id: " + productId));
         String prompt = """
         You are a pricing strategy expert.
@@ -34,7 +38,7 @@ public class AIAdvisorServiceImpl implements AIAdvisorService {
             "weightage": "...",
         }
         ] }
-        """.formatted(context.toString());
+        """.formatted(product.getName() + " ," + product.getType());
         return chatClient.prompt(prompt)
                 .call()
                 .entity(AIRecomendationDTO.class);

@@ -14,11 +14,15 @@ public class PriceCalculationStrategyFactory {
 
     MultiDriverPriceCalculationStrategy multiDriverPriceCalculationStrategy;
 
+    AIPriceCalculationStrategy aiPriceCalculationStrategy;
+
     @Autowired
     private PriceCalculationStrategyFactory(BasePriceCalculationStrategy basePriceCalculationStrategy,
-                                            MultiDriverPriceCalculationStrategy multiDriverPriceCalculationStrategy) {
+                                            MultiDriverPriceCalculationStrategy multiDriverPriceCalculationStrategy,
+                                            AIPriceCalculationStrategy aiPriceCalculationStrategy) {
         this.basePriceCalculationStrategy = basePriceCalculationStrategy;
         this.multiDriverPriceCalculationStrategy = multiDriverPriceCalculationStrategy;
+        this.aiPriceCalculationStrategy = aiPriceCalculationStrategy;
     }
 
     public PriceCalculationStrategy getPriceCalculationStrategy(String strategy) {
@@ -31,6 +35,9 @@ public class PriceCalculationStrategyFactory {
         }
         if("MULTI_DRIVER".equalsIgnoreCase(strategy)) {
             return multiDriverPriceCalculationStrategy;
+        }
+        if("AI".equalsIgnoreCase(strategy)) {
+            return aiPriceCalculationStrategy;
         }
         throw new IllegalArgumentException("Strategy is null or invalid");
     }

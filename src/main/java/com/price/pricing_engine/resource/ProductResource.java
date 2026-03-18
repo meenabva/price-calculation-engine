@@ -27,4 +27,6 @@ public class ProductResource {
         // Placeholder for price history retrieval logic
         return null;
     }
+
+    @GetMapping("/ai")
 }
